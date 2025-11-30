@@ -15,7 +15,1369 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Custom Config for Tailwind -->
+    <script><!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ hỗ trợ ứng dụng AI</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Custom Config for Tailwind -->
     <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slideUp': 'slideUp 0.5s ease-out forwards',
+                        'fadeIn': 'fadeIn 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'firefly': 'firefly 10s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        'gradient-x': {
+                            '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                            '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
+                        },
+                        firefly: {
+                            '0%': { transform: 'translate(0, 0) scale(1)', opacity: '0.5' },
+                            '25%': { transform: 'translate(50px, -50px) scale(1.2)', opacity: '0.8' },
+                            '50%': { transform: 'translate(-30px, -100px) scale(0.8)', opacity: '0.4' },
+                            '75%': { transform: 'translate(-80px, -20px) scale(1.1)', opacity: '0.7' },
+                            '100%': { transform: 'translate(20px, 40px) scale(0.9)', opacity: '0.5' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.8); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        
+        body {
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        /* Markdown Styles */
+        .markdown-body p { margin-bottom: 0.75rem; line-height: 1.6; }
+        .markdown-body strong { font-weight: 700; color: inherit; }
+        .markdown-body em { font-style: italic; color: inherit; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        
+        /* Particle Background Effect */
+        .firefly-dot {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            filter: blur(2px);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Upload Area Dashed Border Animation */
+        .upload-area {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%236366F1FF' stroke-width='2' stroke-dasharray='12%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23818CF8FF' stroke-width='3' stroke-dasharray='12%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500/30 min-h-screen relative overflow-x-hidden">
+
+    <!-- Global Background (Solid/Gradient for readability below hero) -->
+    <div id="app-bg" class="fixed inset-0 z-0 pointer-events-none transition-all duration-500"></div>
+
+    <!-- Main App Container -->
+    <div id="root" class="relative z-10 transition-colors duration-500">
+        <!-- Content will be injected by JavaScript -->
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-8 right-8 z-[110] transition-all duration-500 transform translate-y-10 opacity-0 pointer-events-none">
+        <div id="toast-content" class="backdrop-blur-xl border px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3">
+            <i data-lucide="check" size="18"></i>
+            <span id="toast-message" class="font-medium text-sm"></span>
+        </div>
+    </div>
+
+    <!-- Modals (Hidden by default) -->
+    <div id="modal-backdrop" class="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div id="modal-content-wrapper" class="rounded-3xl w-full max-w-6xl border shadow-2xl overflow-hidden relative flex flex-col h-[90vh] md:h-[85vh] transform scale-95 transition-transform duration-300">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 rounded-full z-50 transition-colors" id="modal-close-btn">
+                <i data-lucide="x" size="20"></i>
+            </button>
+            <div id="modal-body" class="h-full flex flex-col">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. DATA & CONFIGURATION
+        // ==========================================
+
+        // API Key dùng chung (Cần thay thế bằng key thật của bạn để tính năng hoạt động tốt nhất)
+        const GEMINI_API_KEY = "AIzaSyAKZB1_qS8XTGF8gtm1eFSJH10Nz-6XdCg";
+
+        const MASTER_PROMPTS = [
+            // --- MÔN TOÁN (Gốc) ---
+            { id: 201, title: "Toán: Ôn tập Lý thuyết", category: "Giáo dục", description: "Giải thích sâu định lý, công thức toán học và ý nghĩa.", content: "Đóng vai giáo viên Toán, hãy giải thích chi tiết về định lý/khái niệm [TÊN ĐỊNH LÝ/KHÁI NIỆM]. \n\nBao gồm:\n1. Định nghĩa chính xác.\n2. Công thức toán học (nếu có).\n3. Ý nghĩa hình học/đại số.\n4. Ví dụ minh họa đơn giản dễ hiểu.", tags: ["Toán", "Lý thuyết", "Math"] },
+            { id: 202, title: "Toán: Luyện giải bài tập", category: "Giáo dục", description: "Hướng dẫn giải toán từng bước (Step-by-step).", content: "Đóng vai gia sư Toán kiên nhẫn, hãy hướng dẫn tôi giải bài toán sau theo từng bước (step-by-step): [ĐỀ BÀI]. \n\nSau mỗi bước hãy giải thích tại sao lại làm như vậy. Cuối cùng, hãy cho một bài toán tương tự (kèm đáp án) để tôi tự luyện.", tags: ["Toán", "Thực hành", "Bài tập"] },
+            { id: 217, title: "Toán: Ứng dụng Thực tế", category: "Giáo dục", description: "Giải quyết các bài toán thực tế (tài chính, xác suất).", content: "Tôi muốn áp dụng toán học vào đời sống. Hãy giúp tôi giải quyết vấn đề: [MÔ TẢ VẤN ĐỀ - VD: Tính lãi suất vay, tối ưu diện tích nhà...].\n\nHãy lập mô hình toán học cho vấn đề này, giải thích các biến số và đưa ra lời khuyên tối ưu nhất dựa trên kết quả tính toán.", tags: ["Toán", "Thực tế", "Ứng dụng"] },
+            // --- TOÁN (Mới thêm) ---
+            { id: 401, title: "Toán: Thủ thuật Casio", category: "Giáo dục", description: "Các mẹo bấm máy tính cầm tay để giải nhanh trắc nghiệm.", content: "Tôi đang cần giải nhanh bài toán trắc nghiệm này bằng máy tính cầm tay (Casio/Vinacal): [ĐỀ BÀI].\n\nHãy hướng dẫn tôi quy trình bấm máy (các phím cần ấn) để ra kết quả nhanh nhất. Giải thích logic của việc bấm máy đó.", tags: ["Toán", "Mẹo", "Casio"] },
+            { id: 402, title: "Toán: Sơ đồ tư duy", category: "Giáo dục", description: "Hệ thống hóa kiến thức chương học thành Mindmap.", content: "Hãy giúp tôi tóm tắt kiến thức của Chương/Chủ đề [TÊN CHƯƠNG] dưới dạng cấu trúc Sơ đồ tư duy (Mindmap). \n\nBao gồm: Nhánh chính (Khái niệm), Nhánh phụ (Các dạng bài tập, Công thức quan trọng) và Các lỗi sai thường gặp.", tags: ["Toán", "Lý thuyết", "Mindmap"] },
+            { id: 403, title: "Toán: Tìm lỗi sai", category: "Giáo dục", description: "Phân tích và sửa chữa lỗi sai trong lời giải.", content: "Tôi giải bài toán này nhưng kết quả có vẻ sai. Đây là lời giải của tôi: [LỜI GIẢI CỦA BẠN].\n\nHãy đóng vai một giáo viên chấm thi khó tính, hãy chỉ ra chính xác tôi sai ở bước nào (logic hay tính toán) và trình bày lại lời giải đúng.", tags: ["Toán", "Debug", "Sửa lỗi"] },
+
+            // --- MÔN LÝ (Gốc) ---
+            { id: 203, title: "Lý: Giải thích Hiện tượng", category: "Giáo dục", description: "Hiểu bản chất hiện tượng và định luật Vật lý.", content: "Hãy giải thích định luật/nguyên lý [TÊN ĐỊNH LUẬT] trong Vật Lý. \n\nHãy sử dụng phép ẩn dụ hoặc so sánh với đời sống thực tế để minh họa cho dễ hiểu. Liệt kê các công thức liên quan cần nhớ.", tags: ["Lý", "Physics", "Lý thuyết"] },
+            { id: 204, title: "Lý: Hướng dẫn Bài tập", category: "Giáo dục", description: "Phân tích đề và giải bài tập Vật lý.", content: "Tôi có bài tập Vật Lý sau: [ĐỀ BÀI]. \n\nHãy giúp tôi:\n1. Tóm tắt đề bài (cho biết gì, tìm gì).\n2. Xác định công thức vật lý phù hợp.\n3. Giải chi tiết từng bước và biện luận kết quả.", tags: ["Lý", "Physics", "Thực hành"] },
+            { id: 218, title: "Lý: Tư duy Thiết kế", category: "Giáo dục", description: "Lên ý tưởng thiết kế máy móc/mạch điện đơn giản.", content: "Tôi muốn chế tạo một [TÊN THIẾT BỊ - VD: Máy tưới cây tự động/Đèn ngủ cảm ứng].\n\nHãy gợi ý cho tôi:\n1. Nguyên lý hoạt động vật lý.\n2. Sơ đồ cấu tạo/mạch điện cơ bản.\n3. Các vật liệu cần thiết và lưu ý an toàn khi thực hiện.", tags: ["Lý", "Sáng tạo", "Thiết kế"] },
+            // --- LÝ (Mới thêm) ---
+            { id: 404, title: "Lý: Mẹo nhớ công thức", category: "Giáo dục", description: "Cách ghi nhớ công thức vật lý khó qua thơ hoặc câu chuyện.", content: "Tôi gặp khó khăn khi nhớ công thức [TÊN CÔNG THỨC/CHƯƠNG]. \n\nHãy sáng tạo cho tôi một câu thần chú, một bài thơ vui hoặc một câu chuyện liên tưởng hình ảnh để tôi có thể ghi nhớ công thức này ngay lập tức.", tags: ["Lý", "Mẹo", "Ghi nhớ"] },
+            { id: 405, title: "Lý: Đọc đồ thị", category: "Giáo dục", description: "Phân tích các dạng đồ thị dao động, điện xoay chiều...", content: "Hãy hướng dẫn tôi cách phân tích đồ thị Vật lý sau: [MÔ TẢ ĐỒ THỊ HOẶC DỮ LIỆU TRỤC TUNG/HOÀNH].\n\nLàm sao để xác định các đại lượng cực đại, pha ban đầu và chu kỳ từ hình dáng đồ thị này?", tags: ["Lý", "Đồ thị", "Kỹ năng"] },
+            { id: 406, title: "Lý: Trắc nghiệm Lý thuyết", category: "Giáo dục", description: "Bộ câu hỏi Đúng/Sai để tránh bẫy lý thuyết.", content: "Hãy tạo cho tôi 10 câu hỏi trắc nghiệm lý thuyết (dạng đếm mệnh đề đúng sai) về chủ đề [CHỦ ĐỀ]. \n\nTập trung vào các chi tiết nhỏ dễ bị lừa. Sau đó cung cấp đáp án và giải thích chi tiết tại sao câu đó đúng/sai.", tags: ["Lý", "Ôn thi", "Trắc nghiệm"] },
+
+            // --- MÔN HÓA (Gốc) ---
+            { id: 205, title: "Hóa: Lý thuyết Chất", category: "Giáo dục", description: "Tính chất hóa học, vật lý và điều chế.", content: "Trình bày chi tiết về đơn chất/hợp chất [TÊN CHẤT]. \n\nNội dung cần có:\n- Tính chất vật lý (màu, mùi, trạng thái).\n- Tính chất hóa học (tác dụng với chất nào, kèm phương trình phản ứng).\n- Ứng dụng và điều chế trong công nghiệp/phòng thí nghiệm.", tags: ["Hóa", "Chemistry", "Lý thuyết"] },
+            { id: 206, title: "Hóa: Giải toán Hóa học", category: "Giáo dục", description: "Cân bằng phương trình và bài toán định lượng.", content: "Giúp tôi giải bài tập Hóa sau: [ĐỀ BÀI]. \n\nNếu là bài toán chuỗi phản ứng, hãy viết rõ phương trình và điều kiện (nhiệt độ, xúc tác). Nếu là bài toán tính toán, hãy giải thích rõ số mol và bảo toàn khối lượng/nguyên tố.", tags: ["Hóa", "Chemistry", "Bài tập"] },
+            { id: 219, title: "Hóa: Nhận biết & Chuỗi pứ", category: "Giáo dục", description: "Phương pháp nhận biết hóa chất và chuỗi phản ứng.", content: "Hãy giúp tôi lập sơ đồ nhận biết các chất sau: [DANH SÁCH CHẤT CẦN NHẬN BIẾT].\n\nNêu rõ thuốc thử cần dùng, hiện tượng quan sát được và viết phương trình hóa học minh họa cho từng bước nhận biết.", tags: ["Hóa", "Thí nghiệm", "Nhận biết"] },
+            // --- HÓA (Mới thêm) ---
+            { id: 407, title: "Hóa: Cơ chế hữu cơ", category: "Giáo dục", description: "Hiểu sâu về cách các chất hữu cơ phản ứng.", content: "Giải thích cơ chế phản ứng giữa [CHẤT A] và [CHẤT B]. \n\nTại sao phản ứng lại xảy ra ở vị trí đó (nhóm chức đó)? Sản phẩm chính và sản phẩm phụ là gì (tuân theo quy tắc nào: Mac-cop-ni-cop hay Zai-xep)?", tags: ["Hóa", "Hữu cơ", "Chuyên sâu"] },
+            { id: 408, title: "Hóa: Ứng dụng đời sống", category: "Giáo dục", description: "Giải thích các hiện tượng hóa học thường gặp.", content: "Hãy giải thích hiện tượng hóa học sau trong đời sống: [TÊN HIỆN TƯỢNG - VD: Mưa axit, Hiệu ứng nhà kính, Tại sao ăn sắn bị say...].\n\nViết phương trình hóa học minh họa nếu có.", tags: ["Hóa", "Thực tế", "Thú vị"] },
+            { id: 409, title: "Hóa: Phòng thí nghiệm ảo", category: "Giáo dục", description: "Mô phỏng quy trình thực hành và an toàn thí nghiệm.", content: "Tôi muốn thực hiện thí nghiệm điều chế [TÊN CHẤT] trong phòng thí nghiệm.\n\nHãy liệt kê dụng cụ cần thiết, các bước tiến hành chi tiết và đặc biệt là các lưu ý an toàn (xử lý khí độc, chống cháy nổ).", tags: ["Hóa", "Thí nghiệm", "An toàn"] },
+
+            // --- MÔN SINH (Gốc) ---
+            { id: 207, title: "Sinh: Cơ chế Sinh học", category: "Giáo dục", description: "Hệ thống hóa các quá trình sinh học phức tạp.", content: "Giải thích cơ chế/quá trình sinh học [TÊN QUÁ TRÌNH] (ví dụ: Quang hợp, Phiên mã, Nguyên phân...). \n\nHãy chia nhỏ quá trình thành các giai đoạn, mô tả diễn biến chính tại mỗi giai đoạn và ý nghĩa sinh học của nó.", tags: ["Sinh", "Biology", "Lý thuyết"] },
+            { id: 208, title: "Sinh: Bài tập Di truyền", category: "Giáo dục", description: "Giải bài tập gen, phả hệ và sinh thái.", content: "Hãy hướng dẫn giải bài tập Di truyền/Sinh thái sau: [ĐỀ BÀI]. \n\nHãy phân tích dữ kiện đề bài (trội/lặn, quy luật di truyền) và trình bày phương pháp giải logic, khoa học.", tags: ["Sinh", "Biology", "Thực hành"] },
+            { id: 220, title: "Sinh: Bệnh học & Miễn dịch", category: "Giáo dục", description: "Tìm hiểu nguyên nhân và cơ chế bệnh.", content: "Hãy giải thích cơ chế gây bệnh của [TÊN BỆNH/VIRUS] ở cấp độ tế bào/phân tử.\n\nCơ thể phản ứng lại như thế nào (cơ chế miễn dịch)? Các biện pháp phòng ngừa dựa trên cơ chế lây truyền là gì?", tags: ["Sinh", "Y học", "Cơ thể"] },
+            // --- SINH (Mới thêm) ---
+            { id: 410, title: "Sinh: So sánh Sinh học", category: "Giáo dục", description: "Phân biệt các khái niệm dễ nhầm lẫn.", content: "Hãy lập bảng so sánh chi tiết giữa [KHÁI NIỆM A] và [KHÁI NIỆM B] (VD: Nguyên phân vs Giảm phân, ADN vs ARN).\n\nCác tiêu chí so sánh: Cấu trúc, Chức năng, Vị trí diễn ra và Ý nghĩa sinh học.", tags: ["Sinh", "So sánh", "Lý thuyết"] },
+            { id: 411, title: "Sinh: Sơ đồ chuyển hóa", category: "Giáo dục", description: "Học các chu trình sinh học (Crep, Canvin...).", content: "Hãy mô tả chu trình/quá trình [TÊN CHU TRÌNH] dưới dạng các gạch đầu dòng theo trình tự thời gian.\n\nNguyên liệu đầu vào là gì? Sản phẩm đầu ra là gì? Năng lượng (ATP) được tạo ra/tiêu thụ ở bước nào?", tags: ["Sinh", "Quy trình", "Ghi nhớ"] },
+            { id: 412, title: "Sinh: Sinh thái & Môi trường", category: "Giáo dục", description: "Phân tích các vấn đề môi trường và hệ sinh thái.", content: "Phân tích mối quan hệ giữa các loài trong quần xã sau: [MÔ TẢ CÁC LOÀI].\n\nĐây là quan hệ gì (Cộng sinh, Hội sinh, Ký sinh...)? Nếu loài A bị tiêu diệt thì ảnh hưởng thế nào đến lưới thức ăn này?", tags: ["Sinh", "Sinh thái", "Tư duy"] },
+
+            // --- MÔN SỬ (Gốc) ---
+            { id: 209, title: "Sử: Sự kiện & Nhân chứng", category: "Giáo dục", description: "Tái hiện bối cảnh và ý nghĩa lịch sử.", content: "Cung cấp kiến thức sâu về sự kiện/giai đoạn lịch sử [TÊN SỰ KIỆN]. \n\nPhân tích theo cấu trúc:\n1. Hoàn cảnh lịch sử (nguyên nhân sâu xa/trực tiếp).\n2. Diễn biến chính (timeline).\n3. Kết quả và Ý nghĩa lịch sử đối với thời đại.", tags: ["Sử", "History", "Lý thuyết"] },
+            { id: 210, title: "Sử: Tư duy Phân tích", category: "Giáo dục", description: "So sánh và đánh giá các vấn đề lịch sử.", content: "Hãy phân tích hoặc so sánh vấn đề lịch sử sau: [VẤN ĐỀ CẦN SO SÁNH]. \n\nHãy đưa ra các luận điểm rõ ràng, khách quan, có dẫn chứng cụ thể và rút ra bài học kinh nghiệm.", tags: ["Sử", "History", "Tư duy"] },
+            { id: 221, title: "Sử: Nhập vai Nhân vật", category: "Giáo dục", description: "Học sử qua góc nhìn người trong cuộc.", content: "Hãy đóng vai nhân vật lịch sử [TÊN NHÂN VẬT]. Hãy kể lại những suy nghĩ, trăn trở và quyết định của ông/bà trong bối cảnh [TÊN SỰ KIỆN/THỜI KỲ].\n\nGiọng văn cần phù hợp với thời đại và tính cách nhân vật.", tags: ["Sử", "Roleplay", "Kể chuyện"] },
+            // --- SỬ (Mới thêm) ---
+            { id: 413, title: "Sử: Liên hệ Việt Nam - Thế giới", category: "Giáo dục", description: "Đặt lịch sử VN vào bối cảnh toàn cầu.", content: "Trong giai đoạn [KHOẢNG THỜI GIAN], tình hình thế giới (Chiến tranh lạnh, Khủng hoảng kinh tế...) đã tác động trực tiếp như thế nào đến cách mạng Việt Nam? Hãy phân tích mối liên hệ này.", tags: ["Sử", "Liên hệ", "Tư duy"] },
+            { id: 414, title: "Sử: Ghi nhớ Niên biểu", category: "Giáo dục", description: "Phương pháp nhớ mốc thời gian không bao giờ quên.", content: "Tôi rất khó nhớ các mốc thời gian của [GIAI ĐOẠN LỊCH SỬ]. \n\nHãy giúp tôi nhóm các sự kiện này theo chủ đề hoặc tạo ra một trục thời gian (Timeline) logic để dễ học thuộc lòng.", tags: ["Sử", "Mẹo", "Timeline"] },
+            { id: 415, title: "Sử: Giả định Lịch sử", category: "Giáo dục", description: "Tư duy phản biện 'Nếu... thì...'.", content: "Nếu sự kiện [TÊN SỰ KIỆN] có kết quả ngược lại, thì cục diện lịch sử sẽ thay đổi như thế nào? \n\nHãy đưa ra một giả thuyết lịch sử dựa trên các dữ kiện thực tế của thời kỳ đó.", tags: ["Sử", "Giả định", "Phản biện"] },
+
+            // --- MÔN ĐỊA (Gốc) ---
+            { id: 211, title: "Địa: Đặc điểm Vùng miền", category: "Giáo dục", description: "Phân tích tự nhiên, dân cư và kinh tế xã hội.", content: "Trình bày đặc điểm [TỰ NHIÊN/KINH TẾ] của khu vực/quốc gia [TÊN VÙNG]. \n\nPhân tích các thế mạnh (thuận lợi) và hạn chế (khó khăn) ảnh hưởng đến sự phát triển của vùng này.", tags: ["Địa", "Geography", "Lý thuyết"] },
+            { id: 212, title: "Địa: Phân tích Biểu đồ", category: "Giáo dục", description: "Kỹ năng làm việc với Atlat và số liệu.", content: "Dựa vào bảng số liệu/mô tả biểu đồ sau: [DỮ LIỆU/MÔ TẢ]. \n\nHãy nhận xét tình hình phát triển, so sánh sự thay đổi qua các năm và giải thích nguyên nhân của sự thay đổi đó.", tags: ["Địa", "Geography", "Thực hành"] },
+            { id: 222, title: "Địa: Quy hoạch & Du lịch", category: "Giáo dục", description: "Lên kế hoạch phát triển du lịch hoặc tour.", content: "Tôi muốn thiết kế một tour du lịch 3 ngày 2 đêm tại [ĐỊA ĐIỂM].\n\nHãy gợi ý lịch trình dựa trên điều kiện địa lý, khí hậu và các danh lam thắng cảnh nổi bật. Giải thích tại sao chọn lộ trình đó (tính hợp lý về di chuyển và trải nghiệm).", tags: ["Địa", "Du lịch", "Quy hoạch"] },
+            // --- ĐỊA (Mới thêm) ---
+            { id: 416, title: "Địa: Kỹ năng Atlat", category: "Giáo dục", description: "Khai thác tối đa Atlat Địa lý Việt Nam.", content: "Dựa vào Atlat Địa lý Việt Nam trang [SỐ TRANG/TÊN TRANG], hãy hướng dẫn tôi cách khai thác thông tin về [NỘI DUNG CẦN TÌM]. \n\nTôi cần chú ý đến các ký hiệu nào và kết hợp với trang nào khác để có câu trả lời đầy đủ nhất?", tags: ["Địa", "Atlat", "Kỹ năng"] },
+            { id: 417, title: "Địa: Biến đổi khí hậu", category: "Giáo dục", description: "Liên hệ kiến thức với vấn đề nóng toàn cầu.", content: "Phân tích tác động của biến đổi khí hậu đến vùng [TÊN VÙNG - VD: ĐBSCL].\n\nNêu rõ các biểu hiện thực tế (xâm nhập mặn, sạt lở...) và đề xuất các giải pháp thích ứng phù hợp với điều kiện tự nhiên của vùng.", tags: ["Địa", "Thực tế", "Môi trường"] },
+            { id: 418, title: "Địa: Chuyển dịch cơ cấu", category: "Giáo dục", description: "Phân tích xu hướng kinh tế vĩ mô.", content: "Dựa trên xu hướng hiện nay, hãy phân tích sự chuyển dịch cơ cấu kinh tế của ngành [TÊN NGÀNH/VÙNG]. \n\nTại sao lại có sự chuyển dịch đó? (Nguyên nhân khách quan và chủ quan).", tags: ["Địa", "Kinh tế", "Phân tích"] },
+
+            // --- MÔN VĂN (Gốc) ---
+            { id: 213, title: "Văn: Tác giả & Tác phẩm", category: "Giáo dục", description: "Kiến thức nền tảng về văn học.", content: "Giới thiệu về tác giả [TÊN TÁC GIẢ] (phong cách nghệ thuật, đề tài chính) và tóm tắt giá trị nội dung, nghệ thuật của tác phẩm [TÊN TÁC PHẨM].", tags: ["Văn", "Literature", "Lý thuyết"] },
+            { id: 214, title: "Văn: Luyện viết & Dàn ý", category: "Giáo dục", description: "Lập dàn ý chi tiết và viết đoạn văn mẫu.", content: "Lập dàn ý chi tiết cho đề văn: [ĐỀ BÀI]. \n\nDàn ý cần có:\n- Mở bài: Gián tiếp/Trực tiếp.\n- Thân bài: Các luận điểm chính (kèm dẫn chứng/trích dẫn thơ văn).\n- Kết bài: Mở rộng vấn đề.", tags: ["Văn", "Literature", "Thực hành"] },
+            { id: 223, title: "Văn: Sáng tác & Phóng tác", category: "Giáo dục", description: "Sáng tạo kết thúc mới hoặc viết truyện ngắn.", content: "Hãy viết lại phần kết thúc (hoặc một đoạn trích) của tác phẩm [TÊN TÁC PHẨM] theo hướng: [HƯỚNG SÁNG TẠO - VD: Kết thúc có hậu hơn, thay đổi ngôi kể...].\n\nGiữ được giọng văn và phong cách của tác giả gốc.", tags: ["Văn", "Sáng tạo", "Viết lách"] },
+            // --- VĂN (Mới thêm) ---
+            { id: 419, title: "Văn: Lý luận Văn học", category: "Giáo dục", description: "Nâng cao điểm số bằng kiến thức lý luận.", content: "Hãy giải thích nhận định lý luận văn học sau: '[CÂU NHẬN ĐỊNH]'. \n\nSau đó, hãy hướng dẫn tôi cách áp dụng nhận định này để phân tích tác phẩm [TÊN TÁC PHẨM] nhằm làm sâu sắc bài văn.", tags: ["Văn", "Lý luận", "Nâng cao"] },
+            { id: 420, title: "Văn: Phân tích Nghệ thuật", category: "Giáo dục", description: "Đi sâu vào thủ pháp nghệ thuật của tác giả.", content: "Hãy phân tích các thủ pháp nghệ thuật đặc sắc (biện pháp tu từ, điểm nhìn trần thuật, giọng điệu) được sử dụng trong đoạn trích: [ĐOẠN TRÍCH]. \n\nHiệu quả thẩm mỹ mà các thủ pháp này mang lại là gì?", tags: ["Văn", "Nghệ thuật", "Phân tích"] },
+            { id: 421, title: "Văn: Nghị luận Xã hội", category: "Giáo dục", description: "Viết đoạn văn 200 chữ về vấn đề nóng.", content: "Viết một đoạn văn nghị luận xã hội (khoảng 200 chữ) bàn về vấn đề: [VẤN ĐỀ - VD: Sống ảo, Lòng dũng cảm...].\n\nCấu trúc: Giải thích -> Phân tích/Bàn luận -> Phản đề -> Bài học nhận thức & Hành động.", tags: ["Văn", "Nghị luận", "Xã hội"] },
+
+            // --- MÔN ANH (Gốc) ---
+            { id: 215, title: "Anh: Ngữ pháp & Từ vựng", category: "Giáo dục", description: "Giải thích điểm ngữ pháp và từ vựng theo chủ đề.", content: "Giải thích chi tiết chủ đề ngữ pháp/từ vựng: [CHỦ ĐỀ]. \n\nBao gồm: Cấu trúc, Cách dùng, Dấu hiệu nhận biết và Các trường hợp ngoại lệ (nếu có). Cho 5 ví dụ minh họa.", tags: ["Anh", "English", "Lý thuyết"] },
+            { id: 216, title: "Anh: Sửa lỗi & Writing", category: "Giáo dục", description: "Chấm bài và paraphrase câu văn hay hơn.", content: "Tôi đang luyện viết tiếng Anh. Hãy chấm và sửa lỗi cho đoạn văn sau của tôi: [ĐOẠN VĂN CỦA BẠN]. \n\nHãy chỉ ra lỗi sai ngữ pháp/từ vựng và đề xuất cách viết lại (paraphrase) cho tự nhiên và 'sang' hơn (academic).", tags: ["Anh", "English", "Thực hành"] },
+            { id: 224, title: "Anh: Luyện thi IELTS Writing", category: "Giáo dục", description: "Hướng dẫn viết bài luận chuẩn IELTS.", content: "Hãy lập dàn ý và viết bài mẫu cho đề IELTS Writing Task [1 hoặc 2]: [ĐỀ BÀI].\n\nPhân tích các từ vựng band điểm cao (C1/C2) được sử dụng trong bài và giải thích cấu trúc lập luận.", tags: ["Anh", "IELTS", "Writing"] },
+            // --- ANH (Mới thêm) ---
+            { id: 422, title: "Anh: Collocations & Idioms", category: "Giáo dục", description: "Học các cụm từ cố định để dùng tiếng Anh tự nhiên.", content: "Hãy liệt kê 10 Collocations (cụm từ cố định) và Idioms (thành ngữ) hay nhất liên quan đến chủ đề [CHỦ ĐỀ]. \n\nGiải thích nghĩa và đặt câu ví dụ cho từng cụm từ.", tags: ["Anh", "Từ vựng", "Nâng cao"] },
+            { id: 423, title: "Anh: Reading Strategy", category: "Giáo dục", description: "Chiến thuật làm bài đọc hiểu nhanh.", content: "Tôi có một bài đọc hiểu tiếng Anh (Reading Comprehension). Hãy giúp tôi:\n1. Skimming: Tìm ý chính của bài.\n2. Scanning: Tìm thông tin cho câu hỏi cụ thể [CÂU HỎI].\n3. Giải thích các từ mới quan trọng trong ngữ cảnh.", tags: ["Anh", "Kỹ năng", "Reading"] },
+            { id: 424, title: "Anh: Speaking Partner", category: "Giáo dục", description: "Luyện nói tiếng Anh qua lại với AI.", content: "Hãy đóng vai một người bản xứ nói tiếng Anh. Chúng ta sẽ thảo luận về chủ đề [CHỦ ĐỀ]. \n\nHãy đặt câu hỏi cho tôi, đợi tôi trả lời, sau đó sửa lỗi phát âm/ngữ pháp cho tôi và tiếp tục câu chuyện một cách tự nhiên.", tags: ["Anh", "Giao tiếp", "Speaking"] },
+
+            // --- BỔ SUNG: VIẾT LÁCH (2 Prompt Mới) ---
+            { id: 301, title: "Kỹ thuật 'Show, Don't Tell'", category: "Viết lách", description: "Biến văn kể lể nhàm chán thành hình ảnh sống động.", content: "Hãy giúp tôi áp dụng kỹ thuật 'Show, Don't Tell' (Tả chứ không kể) cho đoạn văn sau: [ĐOẠN VĂN CỦA BẠN].\n\nHãy viết lại đoạn văn trên để người đọc có thể hình dung, cảm nhận được cảm xúc/bối cảnh qua hành động, giác quan thay vì dùng tính từ miêu tả trực tiếp.", tags: ["Writing", "Kỹ thuật", "Sáng tạo"] },
+            { id: 302, title: "Biến hóa Giọng văn (Tone)", category: "Viết lách", description: "Viết lại nội dung theo 3 sắc thái cảm xúc khác nhau.", content: "Hãy viết lại đoạn văn bản sau theo 3 phong cách (tone) khác nhau:\n1. Hài hước, dí dỏm (Witty).\n2. Trang trọng, chuyên nghiệp (Professional).\n3. Cảm xúc, sâu lắng (Emotional).\n\nĐoạn văn bản gốc: [ĐOẠN VĂN BẢN].", tags: ["Writing", "Tone", "Content"] },
+
+            // --- CÁC PROMPT CŨ (Giữ nguyên) ---
+            { id: 101, title: "Gia sư Toán Học (Chung)", category: "Giáo dục", description: "Giải bài toán chi tiết từng bước và giải thích lý thuyết.", content: "Hãy đóng vai một giáo viên Toán kiên nhẫn. Tôi sẽ đưa ra một bài toán [LOẠI TOÁN: Đại số/Hình học]. Hãy giải quyết nó theo từng bước (step-by-step), giải thích rõ công thức được sử dụng ở mỗi bước và tại sao lại dùng cách đó. Cuối cùng, hãy cho tôi một bài tập tương tự (kèm đáp án) để tôi tự luyện tập.\n\nBài toán của tôi là: [NỘI DUNG BÀI TOÁN]", tags: ["Toán", "Math", "Step-by-step"] },
+            { id: 1, title: "Chuyên gia ReactJS", category: "Lập trình", description: "Biến AI thành một lập trình viên Senior React để review code và tối ưu hiệu năng.", content: "Hãy đóng vai một chuyên gia Senior React Developer. Tôi sẽ cung cấp cho bạn một đoạn code, hãy giúp tôi: 1. Tìm các lỗi tiềm ẩn (bugs). 2. Đề xuất cách tối ưu hiệu năng (performance). 3. Viết lại code theo phong cách Clean Code và tuân thủ các best practices mới nhất.\n\nCode của tôi:\n[DÁN CODE VÀO ĐÂY]", tags: ["React", "Clean Code", "Optimization"] },
+            { id: 2, title: "Viết bài chuẩn SEO", category: "Marketing", description: "Tạo dàn ý và viết bài blog thân thiện với công cụ tìm kiếm.", content: "Bạn là một chuyên gia SEO và Content Marketing với 10 năm kinh nghiệm. Hãy viết một bài blog chi tiết về chủ đề [CHỦ ĐỀ BÀI VIẾT]. Bài viết cần bao gồm: Tiêu đề hấp dẫn, Sapo thu hút, Các thẻ H2/H3 được phân bổ hợp lý chứa từ khóa, và phần kết luận kêu gọi hành động (Call to Action).", tags: ["SEO", "Content", "Blog"] },
+            { id: 3, title: "Giáo viên tiếng Anh (Chung)", category: "Giáo dục", description: "Luyện hội thoại và sửa lỗi ngữ pháp tiếng Anh.", content: "Tôi muốn bạn đóng vai giáo viên tiếng Anh IELTS 8.0. Chúng ta sẽ trò chuyện về chủ đề '[CHỦ ĐỀ HỘI THOẠI]'. Hãy sửa lỗi ngữ pháp cho tôi sau mỗi câu trả lời và gợi ý những từ vựng nâng cao hơn (C1/C2) để thay thế.", tags: ["English", "IELTS", "Learning"] },
+            { id: 4, title: "Tóm tắt sách/tài liệu", category: "Năng suất", description: "Rút gọn nội dung dài thành các ý chính dễ hiểu.", content: "Hãy tóm tắt văn bản sau đây thành 5 ý chính quan trọng nhất dưới dạng danh sách (bullet points). Giọng văn cần ngắn gọn, súc tích và dễ hiểu cho người mới bắt đầu: [DÁN VĂN BẢN VÀO ĐÂY]", tags: ["Summary", "Productivity"] },
+            { id: 5, title: "Tạo lịch đăng bài MXH", category: "Marketing", description: "Lên kế hoạch nội dung cho Facebook/Tiktok trong 1 tuần.", content: "Hãy tạo giúp tôi một lịch đăng bài content trong 7 ngày cho kênh Tiktok về chủ đề '[CHỦ ĐỀ KÊNH]'. Mỗi ngày cần có: 1. Ý tưởng video. 2. Hook (câu dẫn) mở đầu. 3. Gợi ý nhạc trending/âm thanh phù hợp.", tags: ["Social Media", "Plan", "Tiktok"] },
+            { id: 6, title: "Giải thích khái niệm phức tạp", category: "Giáo dục", description: "Biến những thứ khó hiểu thành đơn giản (ELI5).", content: "Hãy giải thích khái niệm [KHÁI NIỆM CẦN GIẢI THÍCH] cho tôi như thể tôi là một đứa trẻ 5 tuổi. Sử dụng các phép ẩn dụ sinh động và tránh dùng từ ngữ chuyên ngành khó hiểu.", tags: ["Explain", "ELI5", "Fun"] },
+            { id: 7, title: "Viết Email chuyên nghiệp", category: "Công việc", description: "Soạn thảo email công việc trang trọng và lịch sự.", content: "Viết một email gửi cho [NGƯỜI NHẬN] để [MỤC ĐÍCH EMAIL]. Giọng văn cần chân thành, chuyên nghiệp, nhận trách nhiệm và đề xuất giải pháp.", tags: ["Email", "Business", "Professional"] },
+            { id: 8, title: "Debug Code Python", category: "Lập trình", description: "Tìm lỗi và giải thích nguyên nhân trong đoạn code Python.", content: "Đoạn code Python sau đây đang gặp lỗi [MÔ TẢ LỖI]. Hãy phân tích nguyên nhân gây lỗi, giải thích logic sai ở đâu và cung cấp đoạn code đã sửa hoàn chỉnh.\n\nCode:\n[DÁN CODE PYTHON]", tags: ["Python", "Debug", "Fix"] }
+            
+        ];
+
+        const CATEGORIES = ["Tất cả", "Giáo dục", "Lập trình", "Marketing", "Viết lách", "Công việc", "Năng suất"];
+        
+        // MAPPING FOR CATEGORY ICONS
+        const CATEGORY_ICONS = {
+            "Công việc": "công việc.png",
+            "Giáo dục": "Giáo dục.png",
+            "Lập trình": "lập trình.jpg",
+            "Marketing": "marketing.png",
+            "Năng suất": "năng suất.png",
+            "Viết lách": "viết lách.png",
+            "Tất cả": null 
+        };
+
+        // NEW: MAPPING FOR SUBJECT ICONS (CHI TIẾT MÔN HỌC)
+        // Key là tag đầu tiên hoặc từ khóa trong tags để nhận diện
+        const SUBJECT_ICONS = {
+            "Toán": "toán.jpg",
+            "Lý": "Lý.jpg",       // Lưu ý: L viết hoa như tên file
+            "Hóa": "hóa.png",
+            "Sinh": "sinh.jpg",
+            "Sử": "sử.jpg",
+            "Địa": "địa.png",
+            "Văn": "ngữ văn.png", // Tag trong prompt là "Văn" -> map sang file "ngữ văn.png"
+            "Anh": "tiếng anh.webp" // Tag trong prompt là "Anh" -> map sang file "tiếng anh.webp"
+        };
+        
+        // NEW: LIST OF SUBJECTS FOR SUB-NAVIGATION
+        const SUBJECT_LIST = ["Toán", "Lý", "Hóa", "Sinh", "Sử", "Địa", "Văn", "Anh"];
+
+        const AI_TOOLS = [
+            { id: "gpt", name: "ChatGPT", company: "OpenAI", description: "AI tiên phong trong cuộc cách mạng LLM. Nổi bật với khả năng hội thoại tự nhiên, viết code và sáng tạo nội dung đa dạng.", url: "https://chat.openai.com", color: "text-emerald-500", bg: "bg-emerald-500/10", border: "border-emerald-500/20", icon: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" },
+            { id: "gemini", name: "Gemini", company: "Google", description: "Mô hình đa phương thức mạnh mẽ của Google. Tích hợp sâu vào hệ sinh thái Google và xử lý thông tin thời gian thực tốt.", url: "https://gemini.google.com", color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20", icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" },
+            { id: "claude", name: "Claude", company: "Anthropic", description: "Nổi tiếng với khả năng xử lý văn bản dài (context window lớn), lập luận logic an toàn và giọng văn tự nhiên.", url: "https://claude.ai", color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20", icon: "https://sm.pcmag.com/t/pcmag_uk/review/c/claude/claude_5gnz.1200.jpg" },
+            { id: "copilot", name: "Copilot", company: "Microsoft", description: "Trợ lý AI tích hợp trong Windows và Office 365, sử dụng công nghệ GPT-4. Hỗ trợ tìm kiếm web hiệu quả.", url: "https://copilot.microsoft.com", color: "text-sky-500", bg: "bg-sky-500/10", border: "border-sky-500/20", icon: "https://socialsciences.mcmaster.ca/app/uploads/2023/11/Untitled-design-81.png" }
+        ];
+
+        const RELIABLE_ARTICLES = [
+            { title: "Báo cáo Chỉ số AI 2024 - Stanford", org: "Stanford HAI", url: "https://aiindex.stanford.edu/report/", desc: "Tổng hợp toàn diện về tác động, xu hướng và sự phát triển của AI toàn cầu." },
+            { title: "Hướng dẫn Đạo đức AI", org: "UNESCO", url: "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics", desc: "Khung tiêu chuẩn toàn cầu đầu tiên về việc sử dụng AI có trách nhiệm và nhân văn." },
+            { title: "Tương lai của công việc với AI", org: "World Economic Forum", url: "https://www.weforum.org/reports/the-future-of-jobs-report-2030/", desc: "Phân tích cách AI sẽ thay đổi thị trường lao động và kỹ năng cần thiết trong tương lai." },
+            { title: "AI Act: Luật AI của Châu Âu", org: "European Commission", url: "https://digital-strategy.ec.europa.eu/en/policies/ai-act", desc: "Tìm hiểu về đạo luật toàn diện đầu tiên trên thế giới nhằm kiểm soát rủi ro của AI." }
+        ];
+
+        const ETHICS_GUIDE = [
+            { icon: "shield-check", color: "text-emerald-500", title: "Bảo mật Dữ liệu", content: "Không bao giờ nhập thông tin cá nhân nhạy cảm, mật khẩu hoặc bí mật công ty vào các chatbox AI công cộng." },
+            { icon: "search-check", color: "text-blue-500", title: "Luôn Kiểm Chứng", content: "AI có thể 'ảo giác' (bịa đặt thông tin). Hãy luôn đối chiếu các số liệu và sự kiện quan trọng với nguồn chính thống." },
+            { icon: "user-check", color: "text-purple-500", title: "Giữ Chất Riêng", content: "Sử dụng AI để hỗ trợ ý tưởng và phác thảo, nhưng hãy để tư duy và giọng văn của chính bạn quyết định sản phẩm cuối cùng." },
+            { icon: "alert-triangle", color: "text-orange-500", title: "Tránh Lạm Dụng", content: "Không sử dụng AI để tạo tin giả (fake news), gian lận trong học tập hoặc tạo nội dung gây thù hằn, xúc phạm." }
+        ];
+
+        const THEME_CONFIG = {
+            dark: {
+                id: 'dark',
+                // Nền mặc định quay về gradient tối để dễ đọc ở phần dưới
+                bg: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0a0f] to-black",
+                overlay: "bg-black/70",
+                textPrimary: "text-slate-200",
+                textSecondary: "text-slate-400",
+                textAccent: "text-indigo-400",
+                glass: "bg-black/40 backdrop-blur-xl border border-white/10",
+                glassHover: "hover:bg-white/5 hover:border-white/20",
+                cardBg: "bg-[#0f111a]/80 backdrop-blur-sm",
+                inputBg: "bg-black/40",
+                border: "border-white/10",
+                iconBg: "bg-white/5",
+                modalBg: "bg-[#0f111a]",
+                modalOverlay: "bg-black/80",
+                codeBlock: "bg-black/40 border-white/10",
+                blobOpacity: "opacity-20",
+                scrollThumb: "bg-white/10"
+            },
+            light: {
+                id: 'light',
+                bg: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-white to-blue-50",
+                overlay: "bg-white/80",
+                textPrimary: "text-slate-800",
+                textSecondary: "text-slate-600",
+                textAccent: "text-indigo-600",
+                glass: "bg-white/70 backdrop-blur-xl border border-slate-200 shadow-sm",
+                glassHover: "hover:bg-white hover:border-indigo-200 hover:shadow-md",
+                cardBg: "bg-white/80 backdrop-blur-sm",
+                inputBg: "bg-slate-100",
+                border: "border-slate-200",
+                iconBg: "bg-slate-100",
+                modalBg: "bg-white",
+                modalOverlay: "bg-slate-900/40",
+                codeBlock: "bg-slate-100 border-slate-200",
+                blobOpacity: "opacity-40",
+                scrollThumb: "bg-slate-300"
+            }
+        };
+
+        // State
+        let state = {
+            theme: localStorage.getItem('pm_theme') || 'dark',
+            prompts: JSON.parse(localStorage.getItem('pm_data')) || MASTER_PROMPTS,
+            activeCategory: "Tất cả",
+            activeSubject: null, // NEW: Filter by specific subject in Education
+            searchTerm: "",
+            currentView: "library",
+            modalOpen: false,
+            currentModal: null, 
+            activePrompt: null,
+            activeTool: null, 
+            chatHistory: [],
+            isListening: false,
+            scanResult: "" // Lưu kết quả scan
+        };
+
+        // ==========================================
+        // 2. HELPER FUNCTIONS
+        // ==========================================
+
+        function getStyles() {
+            return THEME_CONFIG[state.theme];
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('pm_theme', state.theme);
+            applyTheme();
+            renderApp();
+        }
+
+        function applyTheme() {
+            const styles = getStyles();
+            const bgDiv = document.getElementById('app-bg');
+            
+            // Apply global background (solid/gradient)
+            bgDiv.className = `fixed inset-0 z-0 pointer-events-none transition-all duration-500 ${styles.bg}`;
+            
+            if (state.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const content = document.getElementById('toast-content');
+            const msgSpan = document.getElementById('toast-message');
+            const styles = getStyles();
+
+            content.className = `backdrop-blur-xl border px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 ${state.theme === 'dark' ? 'bg-slate-900/90 border-emerald-500/30 text-emerald-400' : 'bg-white/90 border-emerald-500/30 text-emerald-600'}`;
+            msgSpan.innerText = message;
+
+            container.classList.remove('translate-y-10', 'opacity-0');
+            container.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                container.classList.add('translate-y-10', 'opacity-0');
+                container.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        function copyToClipboard(text) {
+            if (!text) return;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => showToast("Đã sao chép nội dung!"));
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("Đã sao chép nội dung!");
+                } catch (err) {
+                    showToast("Lỗi sao chép!");
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function simpleMarkdown(text) {
+            if (!text) return '';
+            let codeBlocks = [];
+            let cleanText = text.replace(/```([\s\S]*?)```/g, (match, content) => {
+                codeBlocks.push(content);
+                return `__CODEBLOCK_${codeBlocks.length - 1}__`;
+            });
+            cleanText = escapeHtml(cleanText);
+            let html = cleanText
+                .replace(/\*\*(.*?)\*\*/g, `<strong>$1</strong>`)
+                .replace(/\*(.*?)\*/g, `<em>$1</em>`)
+                .replace(/^# (.*$)/gim, `<h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${state.theme === 'dark' ? 'from-blue-400 to-purple-400' : 'from-blue-600 to-purple-600'} mt-6 mb-4 pb-2 border-b border-white/10">$1</h1>`)
+                .replace(/^## (.*$)/gim, `<h2 class="text-xl font-bold mt-5 mb-3 flex items-center gap-2"><span class="w-1 h-6 bg-indigo-500 rounded-full"></span>$1</h2>`)
+                .replace(/^\- (.*$)/gim, `<div class="flex items-start gap-3 ml-2 mb-1"><span class="text-indigo-500 mt-2 text-[8px]">●</span><span class="flex-1">$1</span></div>`)
+                .replace(/\n/g, '<br/>');
+
+            html = html.replace(/__CODEBLOCK_(\d+)__/g, (match, index) => {
+                const content = codeBlocks[index];
+                const styles = getStyles();
+                const cleanContent = content.trim();
+                const displayContent = escapeHtml(cleanContent);
+                return `<div class="${styles.codeBlock} rounded-xl overflow-hidden my-4 shadow-sm w-full group transition-colors duration-300">
+                            <div class="flex justify-between items-center px-4 py-2 border-b ${styles.border} ${state.theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}">
+                                <span class="text-xs font-mono opacity-70 flex items-center gap-2"><i data-lucide="terminal" size="12"></i> Code</span>
+                                <button onclick="copyToClipboard(\`${cleanContent.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" class="opacity-60 hover:opacity-100 transition-colors p-1.5 rounded-md ${state.theme === 'dark' ? 'hover:bg-white/10' : 'hover:bg-slate-200'}">
+                                    <i data-lucide="copy" size="14"></i>
+                                </button>
+                            </div>
+                            <div class="p-4 overflow-x-auto custom-scrollbar"><code class="font-mono text-sm whitespace-pre ${state.theme === 'dark' ? 'text-blue-300' : 'text-blue-700'}">${displayContent}</code></div>
+                        </div>`;
+            });
+            return `<div class="markdown-body leading-7 text-sm space-y-3 w-full ${state.theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}">${html}</div>`;
+        }
+
+        // ==========================================
+        // 3. RENDER FUNCTIONS
+        // ==========================================
+
+        function renderApp() {
+            const root = document.getElementById('root');
+            const styles = getStyles();
+            let contentHTML = `
+                ${renderHeader()}
+                ${state.currentView === 'library' ? renderLibrary() : renderShowcase()}
+            `;
+            root.innerHTML = contentHTML;
+            root.className = `relative z-10 transition-colors duration-500 ${styles.textPrimary}`; 
+            lucide.createIcons();
+            document.getElementById('search-input')?.addEventListener('input', (e) => {
+                state.searchTerm = e.target.value;
+                renderApp();
+                document.getElementById('search-input').focus(); 
+            });
+        }
+
+        function renderHeader() {
+            const styles = getStyles();
+            return `
+                <header class="sticky top-0 z-50 ${styles.glass} border-b ${styles.border}">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                        <div class="flex items-center gap-3 cursor-pointer group" onclick="switchView('library')">
+                            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-110 transition-transform">
+                                <i data-lucide="terminal" class="text-white" size="22"></i>
+                            </div>
+                            <span class="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r ${state.theme === 'dark' ? 'from-white via-indigo-200 to-white' : 'from-slate-900 via-indigo-700 to-slate-900'} hidden sm:inline">
+                                PromptMaster<span class="text-indigo-500">.vn</span>
+                            </span>
+                        </div>
+                        <nav class="hidden md:flex items-center gap-1 p-1.5 rounded-full border ${styles.border} ${styles.iconBg}">
+                            <button onclick="switchView('library')" class="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${state.currentView === 'library' ? 'bg-indigo-600 text-white shadow-md' : `${styles.textSecondary} hover:${styles.textPrimary} hover:bg-black/5`}">Thư viện Prompt</button>
+                            <button onclick="switchView('showcase')" class="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${state.currentView === 'showcase' ? 'bg-indigo-600 text-white shadow-md' : `${styles.textSecondary} hover:${styles.textPrimary} hover:bg-black/5`}">Thế giới AI</button>
+                        </nav>
+                        <div class="flex items-center gap-3">
+                            <button onclick="toggleTheme()" class="p-2.5 rounded-full transition-all duration-300 border ${styles.border} ${state.theme === 'dark' ? 'bg-white/10 text-yellow-300 hover:bg-white/20' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'}" title="Đổi giao diện">
+                                <i data-lucide="${state.theme === 'dark' ? 'sun' : 'moon'}" size="18" fill="currentColor"></i>
+                            </button>
+                            <!-- Nút Scan Ảnh Mới -->
+                            <button onclick="openModal('scan')" class="p-2.5 rounded-full transition-all duration-300 border ${styles.border} ${state.theme === 'dark' ? 'bg-white/10 hover:bg-white/20' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'}" title="Scan từ ảnh">
+                                <i data-lucide="scan-line" size="18" fill="none"></i>
+                            </button>
+                            <button onclick="openModal('add')" class="relative overflow-hidden transition-all duration-300 transform hover:scale-105 active:scale-95 px-5 py-2.5 rounded-full font-medium flex items-center gap-2 backdrop-blur-md bg-indigo-600/90 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 border border-indigo-400/30 pr-6">
+                                <i data-lucide="plus" size="18"></i> <span>Thêm Prompt</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+            `;
+        }
+
+        function renderLibrary() {
+            const styles = getStyles();
+            // FILTER LOGIC
+            const filteredPrompts = state.prompts.filter(p => {
+                const matchesSearch = p.title.toLowerCase().includes(state.searchTerm.toLowerCase()) || p.tags.some(t => t.toLowerCase().includes(state.searchTerm.toLowerCase()));
+                const matchesCategory = state.activeCategory === "Tất cả" || p.category === state.activeCategory;
+                
+                // New: Filter by specific subject within Education
+                const matchesSubject = state.activeCategory === "Giáo dục" && state.activeSubject 
+                    ? p.tags.some(t => t === state.activeSubject) 
+                    : true;
+
+                return matchesSearch && matchesCategory && matchesSubject;
+            });
+
+            return `
+                ${renderHero()}
+                <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-slideUp relative z-10">
+                    <!-- Main Categories -->
+                    <div class="flex gap-2 overflow-x-auto pb-4 scrollbar-hide snap-x mb-2">
+                        ${CATEGORIES.map(cat => `
+                            <button onclick="setCategory('${cat}')" class="whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 snap-center ${state.activeCategory === cat ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40 transform scale-105' : `${styles.glass} ${styles.textSecondary} hover:${styles.textPrimary} hover:scale-105`}">
+                                ${cat}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- NEW: Subject Sub-Categories (Visible only for Education) -->
+                    ${state.activeCategory === "Giáo dục" ? `
+                        <div class="flex gap-2 overflow-x-auto pb-6 scrollbar-hide snap-x mb-2 animate-fadeIn">
+                             <button onclick="setSubject(null)" class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 snap-center border ${styles.border} ${!state.activeSubject ? 'bg-emerald-500 text-white shadow-md' : `${styles.glass} ${styles.textSecondary} hover:bg-emerald-500/10`}">
+                                Tất cả
+                            </button>
+                            ${SUBJECT_LIST.map(sub => `
+                                <button onclick="setSubject('${sub}')" class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 snap-center border ${styles.border} ${state.activeSubject === sub ? 'bg-emerald-500 text-white shadow-md transform scale-105' : `${styles.glass} ${styles.textSecondary} hover:bg-emerald-500/10`}">
+                                    ${sub}
+                                </button>
+                            `).join('')}
+                        </div>
+                    ` : '<div class="mb-8"></div>'}
+
+                    <!-- Header & Count -->
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold ${styles.textPrimary} flex items-center gap-3">
+                            <i data-lucide="zap" class="text-indigo-500"></i>
+                            ${state.activeCategory === "Tất cả" ? "Khám phá Prompt" : (state.activeSubject ? `${state.activeCategory} > ${state.activeSubject}` : state.activeCategory)}
+                        </h2>
+                        <span class="${styles.textSecondary} font-mono text-xs ${styles.glass} px-3 py-1 rounded-full border ${styles.border}">${filteredPrompts.length} kết quả</span>
+                    </div>
+
+                    <!-- Grid -->
+                    ${filteredPrompts.length > 0 ? `
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${filteredPrompts.map(p => renderPromptCard(p)).join('')}
+                        </div>
+                    ` : `
+                        <div class="text-center py-32 opacity-50">
+                            <i data-lucide="search" class="w-16 h-16 mx-auto mb-4 text-slate-500"></i>
+                            <h3 class="text-xl font-medium">Không tìm thấy kết quả nào</h3>
+                        </div>
+                    `}
+                </main>
+            `;
+        }
+
+        function renderHero() {
+            const styles = getStyles();
+            const heroBgStyle = "background-image: url('Gemini_Generated_Image_n9p0m6n9p0m6n9p0.png'); background-size: cover; background-position: center;";
+            const overlayClass = state.theme === 'dark' ? 'bg-black/70' : 'bg-white/60 backdrop-blur-[2px]';
+
+            const fireflies = Array.from({ length: 15 }).map((_, i) => {
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = 5 + Math.random() * 10;
+                const size = 2 + Math.random() * 4;
+                return `<div class="firefly-dot animate-firefly" style="left: ${left}%; top: ${top}%; width: ${size}px; height: ${size}px; animation-delay: -${delay}s; animation-duration: ${duration}s;"></div>`;
+            }).join('');
+
+            return `
+                <div class="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-32">
+                    <div class="absolute inset-0 z-0 pointer-events-none transition-all duration-500" style="${heroBgStyle}">
+                         <div class="absolute inset-0 ${overlayClass} transition-colors duration-500"></div> 
+                    </div>
+                    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">${fireflies}</div>
+                    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none ${styles.blobOpacity}">
+                        <div class="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] animate-pulse" style="animation-duration: 8s"></div>
+                        <div class="absolute bottom-[20%] right-[20%] w-[600px] h-[600px] bg-indigo-600/30 rounded-full blur-[120px] animate-duration: 10s; animation-delay: 1s"></div>
+                    </div>
+                    
+                    <div class="absolute inset-0 max-w-7xl mx-auto pointer-events-none hidden md:block">
+                        <div class="absolute top-20 left-[12%] animate-float pointer-events-auto cursor-pointer transition-transform hover:scale-110" style="animation-delay: 0s" onclick="openToolModal('gemini')">
+                            <div class="w-16 h-16 rounded-2xl ${styles.glass} flex items-center justify-center shadow-lg"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" class="w-10"></div>
+                        </div>
+                        <div class="absolute bottom-20 right-[12%] animate-float pointer-events-auto cursor-pointer transition-transform hover:scale-110" style="animation-delay: 2s" onclick="openToolModal('gpt')">
+                            <div class="w-16 h-16 rounded-2xl ${styles.glass} flex items-center justify-center shadow-lg"><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" class="w-10"></div>
+                        </div>
+                        <div class="absolute top-32 right-[18%] animate-float pointer-events-auto cursor-pointer transition-transform hover:scale-110" style="animation-delay: 1s" onclick="openToolModal('claude')">
+                            <div class="w-16 h-16 rounded-2xl ${styles.glass} flex items-center justify-center shadow-lg"><img src="https://sm.pcmag.com/t/pcmag_uk/review/c/claude/claude_5gnz.1200.jpg" class="w-10 rounded-lg"></div>
+                        </div>
+                        <div class="absolute bottom-32 left-[18%] animate-float pointer-events-auto cursor-pointer transition-transform hover:scale-110" style="animation-delay: 3s" onclick="openToolModal('copilot')">
+                            <div class="w-16 h-16 rounded-2xl ${styles.glass} flex items-center justify-center shadow-lg"><img src="https://socialsciences.mcmaster.ca/app/uploads/2023/11/Untitled-design-81.png" class="w-10"></div>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+                        <h1 class="text-5xl md:text-7xl font-black ${state.theme === 'dark' ? 'text-white' : 'text-slate-900'} tracking-tight mb-8 leading-tight drop-shadow-xl">
+                            Khai phá tiềm năng <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-gradient-x">AI Chatbot</span>
+                        </h1>
+                        <p class="text-xl ${styles.textSecondary} max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                            Kho tàng các câu lệnh (prompts) được tinh chỉnh kỹ lưỡng giúp bạn làm việc nhanh hơn gấp 10 lần.
+                        </p>
+                        <div class="max-w-2xl mx-auto relative group transition-all duration-300 hover:scale-[1.02]">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                            <div class="relative flex items-center ${styles.glass} rounded-xl p-2">
+                                <i data-lucide="search" class="ml-4 ${styles.textSecondary} group-focus-within:text-indigo-500 transition-colors" size="24"></i>
+                                <input type="text" id="search-input" placeholder="Bạn muốn AI giúp gì hôm nay? (VD: Viết code, Soạn email...)" class="w-full bg-transparent border-none focus:outline-none ${styles.textPrimary} placeholder-slate-400 py-3 px-4 text-lg font-medium outline-none" value="${state.searchTerm}" autofocus>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPromptCard(prompt) {
+            const styles = getStyles();
+            
+            // LOGIC MỚI: Tự động chọn icon dựa trên Tags (ưu tiên) hoặc Category
+            let iconPath = "";
+
+            // 1. Kiểm tra nếu là danh mục Giáo dục thì tìm trong SUBJECT_ICONS
+            if (prompt.category === "Giáo dục") {
+                // Tìm xem có tag nào khớp với key trong SUBJECT_ICONS không
+                const subjectTag = prompt.tags.find(tag => SUBJECT_ICONS[tag]);
+                if (subjectTag) {
+                    iconPath = SUBJECT_ICONS[subjectTag];
+                }
+            }
+
+            // 2. Nếu không tìm thấy icon môn học riêng, dùng icon chung của Category
+            if (!iconPath) {
+                iconPath = CATEGORY_ICONS[prompt.category];
+            }
+
+            // 3. Render HTML cho icon (Ảnh hoặc fallback Lucide icon)
+            const iconHTML = iconPath
+                ? `<img src="${iconPath}" alt="${prompt.category}" class="w-full h-full object-contain drop-shadow-sm">`
+                : `<i data-lucide="sparkles" class="text-yellow-500" size="20"></i>`; 
+
+            return `
+                <div class="group relative ${styles.glass} ${styles.glassHover} rounded-2xl p-6 flex flex-col h-full transition-all duration-300 overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-[40px] group-hover:bg-indigo-500/20 transition-all"></div>
+                    <div class="flex justify-between items-start mb-5 relative z-10">
+                        <div class="p-2.5 ${styles.iconBg} rounded-xl border ${styles.border} group-hover:scale-110 transition-transform duration-300 w-12 h-12 flex items-center justify-center overflow-hidden">
+                            ${iconHTML}
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider ${styles.textSecondary} ${styles.iconBg} px-2 py-1 rounded-md border ${styles.border}">${prompt.category}</span>
+                    </div>
+                    <h3 class="text-xl font-bold ${styles.textPrimary} mb-2 group-hover:text-indigo-500 transition-colors relative z-10">${prompt.title}</h3>
+                    <p class="${styles.textSecondary} text-sm mb-6 line-clamp-2 relative z-10">${prompt.description}</p>
+                    <div class="mt-auto pt-4 border-t ${styles.border} flex items-center justify-between relative z-10">
+                        <div class="flex gap-2">
+                            ${prompt.tags.slice(0, 2).map(tag => `<span class="text-xs ${styles.textSecondary} font-medium">#${tag}</span>`).join('')}
+                        </div>
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
+                            <button onclick='openTestModal(${JSON.stringify(prompt).replace(/'/g, "&#39;")})' class="p-2 bg-emerald-500/10 hover:bg-emerald-500/30 text-emerald-600 rounded-lg transition-colors" title="Chạy thử"><i data-lucide="play" size="16" fill="currentColor"></i></button>
+                            <button onclick='copyToClipboard(\`${prompt.content.replace(/`/g, "\\`").replace(/\n/g, "\\n")}\`)' class="p-2 bg-indigo-500/10 hover:bg-indigo-500/30 text-indigo-600 rounded-lg transition-colors" title="Sao chép"><i data-lucide="copy" size="16"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderShowcase() {
+            const styles = getStyles();
+            
+            // Image specific for the Showcase Hero section
+            const heroBgStyle = "background-image: url('Gemini_Generated_Image_xpwlbixpwlbixpwl.png'); background-size: cover; background-position: center;";
+            // Overlay for text readability
+            const overlayClass = state.theme === 'dark' ? 'bg-black/60' : 'bg-white/80';
+
+            return `
+                <div class="max-w-7xl mx-auto px-4 py-20 animate-fadeIn relative z-10">
+                     <!-- Showcase Hero with Specific Background -->
+                     <div class="relative mb-24 rounded-3xl overflow-hidden p-12 text-center border ${styles.border} shadow-2xl group">
+                        
+                        <!-- Background Layer -->
+                        <div class="absolute inset-0 z-0 pointer-events-none transition-all duration-500" style="${heroBgStyle}">
+                             <div class="absolute inset-0 ${overlayClass} backdrop-blur-sm transition-all duration-500"></div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="relative z-10 flex flex-col items-center">
+                            <div class="mb-6 p-4 bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-lg animate-float">
+                                <i data-lucide="layout-grid" size="32" class="text-indigo-500"></i>
+                            </div>
+                            <h2 class="text-5xl md:text-7xl font-black ${styles.textPrimary} mb-6 tracking-tight">Thế Giới <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Siêu Trí Tuệ</span></h2>
+                            <p class="text-xl ${styles.textSecondary} max-w-2xl mx-auto mb-10 leading-relaxed">Khám phá và so sánh sức mạnh của những mô hình ngôn ngữ lớn (LLM) hàng đầu thế giới.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+                        ${AI_TOOLS.map(tool => `
+                            <div class="${styles.cardBg} rounded-3xl p-8 border ${styles.border} hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden shadow-sm hover:shadow-xl">
+                                <div class="absolute top-0 left-0 w-full h-1 ${tool.bg.replace('bg-', 'bg-gradient-to-r from-transparent via-')}"></div>
+                                <div class="w-16 h-16 mb-6 relative"><div class="absolute inset-0 ${tool.bg} blur-xl rounded-full opacity-50"></div><div class="relative z-10 w-full h-full"><img src="${tool.icon}" class="w-full h-full object-contain"></div></div>
+                                <h4 class="text-2xl font-bold ${tool.color} mb-2">${tool.name}</h4>
+                                <p class="text-xs ${styles.textSecondary} font-bold uppercase tracking-widest mb-4">${tool.company}</p>
+                                <p class="${styles.textSecondary} text-sm leading-relaxed mb-8">${tool.description}</p>
+                                <a href="${tool.url}" target="_blank" class="mt-auto flex items-center justify-center w-full py-3 rounded-xl ${styles.iconBg} hover:bg-indigo-500 hover:text-white border ${styles.border} hover:border-indigo-500 ${styles.textPrimary} font-medium transition-all">Truy cập ngay <i data-lucide="external-link" size="14" class="ml-2"></i></a>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Reliable Research Links -->
+                    <div class="mb-24">
+                        <h3 class="text-3xl font-bold ${styles.textPrimary} mb-8 flex items-center gap-3"><i data-lucide="file-text" class="text-indigo-500"></i> Báo cáo & Nghiên cứu Uy tín</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            ${RELIABLE_ARTICLES.map(article => `
+                                <a href="${article.url}" target="_blank" class="group block p-6 rounded-2xl ${styles.glass} hover:border-indigo-500/50 transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="text-xs font-bold text-indigo-500 uppercase tracking-wider">${article.org}</span>
+                                        <i data-lucide="arrow-up-right" size="16" class="${styles.textSecondary} group-hover:text-indigo-500 transition-colors"></i>
+                                    </div>
+                                    <h4 class="text-xl font-bold ${styles.textPrimary} mb-2 group-hover:text-indigo-500 transition-colors">${article.title}</h4>
+                                    <p class="${styles.textSecondary} text-sm line-clamp-2">${article.desc}</p>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Ethics Guide -->
+                    <div class="rounded-3xl p-10 md:p-16 border ${styles.border} bg-gradient-to-br from-emerald-900/10 to-teal-900/10 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px]"></div>
+                        <div class="relative z-10">
+                            <div class="text-center mb-12">
+                                <h3 class="text-3xl md:text-4xl font-black ${styles.textPrimary} mb-4">Đạo đức & Hướng dẫn Sử dụng AI</h3>
+                                <p class="text-lg ${styles.textSecondary} max-w-3xl mx-auto">Công nghệ chỉ thực sự mạnh mẽ khi được sử dụng một cách có trách nhiệm.</p>
+                            </div>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                ${ETHICS_GUIDE.map(item => `
+                                    <div class="${styles.cardBg} p-6 rounded-2xl border ${styles.border} shadow-lg hover:-translate-y-1 transition-transform duration-300">
+                                        <div class="w-12 h-12 rounded-full bg-white/10 ${item.color} flex items-center justify-center mb-4 text-2xl">
+                                            <i data-lucide="${item.icon}" size="24"></i>
+                                        </div>
+                                        <h4 class="text-lg font-bold ${styles.textPrimary} mb-2">${item.title}</h4>
+                                        <p class="${styles.textSecondary} text-sm leading-relaxed">${item.content}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 4. MODAL LOGIC
+        // ==========================================
+
+        function openModal(type, data = null) {
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content-wrapper');
+            const modalBody = document.getElementById('modal-body');
+            const styles = getStyles();
+
+            modalContent.className = `rounded-3xl w-full max-w-6xl border ${styles.border} shadow-2xl overflow-hidden relative flex flex-col h-[90vh] md:h-[85vh] transform scale-95 transition-transform duration-300 ${styles.modalBg}`;
+            document.getElementById('modal-close-btn').className = `absolute top-4 right-4 p-2 ${styles.iconBg} rounded-full ${styles.textSecondary} hover:${styles.textPrimary} z-50 transition-colors`;
+
+            state.currentModal = type;
+            if (type === 'add') renderAddModal(modalBody, data); // Pass data if exists (from scan)
+            else if (type === 'test') renderTestModal(modalBody);
+            else if (type === 'tool') {
+                modalContent.classList.replace('max-w-6xl', 'max-w-lg');
+                modalContent.style.height = 'auto';
+                renderToolModal(modalBody);
+            }
+            else if (type === 'scan') {
+                // Modal Scan nhỏ gọn hơn một chút
+                modalContent.classList.replace('max-w-6xl', 'max-w-4xl');
+                renderScanModal(modalBody);
+            }
+
+            modalBackdrop.classList.remove('hidden');
+            void modalBackdrop.offsetWidth;
+            modalBackdrop.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content-wrapper');
+            modalBackdrop.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modalBackdrop.classList.add('hidden');
+                modalContent.classList.replace('max-w-lg', 'max-w-6xl');
+                modalContent.classList.replace('max-w-4xl', 'max-w-6xl');
+                modalContent.style.height = ''; 
+                state.currentModal = null;
+                state.activePrompt = null;
+                state.activeTool = null;
+                state.chatHistory = [];
+                state.scanResult = ""; // Reset scan result
+            }, 300);
+        }
+
+        function openToolModal(toolId) {
+            state.activeTool = AI_TOOLS.find(t => t.id === toolId);
+            if(state.activeTool) openModal('tool');
+        }
+
+        function renderToolModal(container) {
+            const tool = state.activeTool;
+            const styles = getStyles();
+            container.innerHTML = `
+                <div class="p-8 text-center flex flex-col items-center justify-center h-full">
+                    <div class="w-24 h-24 mb-6 relative">
+                        <div class="absolute inset-0 ${tool.bg} blur-xl rounded-full opacity-50"></div>
+                        <div class="relative z-10 w-full h-full"><img src="${tool.icon}" class="w-full h-full object-contain"></div>
+                    </div>
+                    <h2 class="text-3xl font-bold ${tool.color} mb-2">${tool.name}</h2>
+                    <p class="text-sm font-bold uppercase tracking-widest ${styles.textSecondary} mb-4">${tool.company}</p>
+                    <p class="${styles.textSecondary} mb-8 leading-relaxed">${tool.description}</p>
+                    <a href="${tool.url}" target="_blank" class="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2">
+                        Truy cập ngay <i data-lucide="external-link" size="20"></i>
+                    </a>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // NEW: SCAN MODAL RENDER FUNCTION (UPDATED WITH REFINE BUTTON)
+        // ==========================================
+        function renderScanModal(container) {
+            const styles = getStyles();
+            container.innerHTML = `
+                <div class="p-6 border-b ${styles.border} bg-gradient-to-r from-indigo-900/10 to-purple-900/10">
+                    <h2 class="text-2xl font-bold ${styles.textPrimary} flex items-center gap-3"><i data-lucide="scan-line" class="text-indigo-500"></i> Trích xuất Prompt từ Ảnh (OCR)</h2>
+                </div>
+                <div class="flex-1 p-8 flex flex-col md:flex-row gap-8 overflow-hidden">
+                    <!-- Left: Upload Area -->
+                    <div class="w-full md:w-1/2 flex flex-col gap-4">
+                        <div id="drop-zone" class="upload-area flex-1 rounded-2xl border-2 border-dashed ${state.theme === 'dark' ? 'border-slate-700 hover:border-indigo-500 bg-slate-800/30' : 'border-slate-300 hover:border-indigo-500 bg-slate-50'} flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all relative overflow-hidden group">
+                            <input type="file" id="file-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="handleFileSelect(event)">
+                            <div id="preview-container" class="hidden absolute inset-0 z-0">
+                                <img id="image-preview" class="w-full h-full object-contain p-2">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-white bg-black/50 px-4 py-2 rounded-lg font-medium">Thay đổi ảnh</span>
+                                </div>
+                            </div>
+                            <div id="upload-placeholder" class="pointer-events-none">
+                                <div class="w-16 h-16 bg-indigo-500/10 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-500">
+                                    <i data-lucide="image-plus" size="32"></i>
+                                </div>
+                                <h3 class="font-bold ${styles.textPrimary} mb-1">Tải ảnh lên</h3>
+                                <p class="text-sm ${styles.textSecondary}">Kéo thả hoặc nhấn để chọn ảnh</p>
+                            </div>
+                        </div>
+                        <button id="scan-btn" onclick="handleImageScan()" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold shadow-lg shadow-indigo-500/30 transition-all flex items-center justify-center gap-2" disabled>
+                            <i data-lucide="sparkles" size="18"></i> Trích xuất văn bản
+                        </button>
+                    </div>
+
+                    <!-- Right: Result Area -->
+                    <div class="w-full md:w-1/2 flex flex-col">
+                        <label class="block text-sm font-bold ${styles.textSecondary} mb-2">Kết quả trích xuất:</label>
+                        <div class="flex-1 relative">
+                            <textarea id="scan-result" class="w-full h-full ${styles.inputBg} border ${styles.border} rounded-xl p-4 ${styles.textPrimary} font-mono text-sm outline-none focus:border-indigo-500 transition-all resize-none" placeholder="Nội dung văn bản sẽ xuất hiện tại đây..." readonly></textarea>
+                            <div id="scan-loading" class="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center hidden">
+                                <div class="flex flex-col items-center gap-3 text-white">
+                                    <i data-lucide="loader-2" class="animate-spin" size="32"></i>
+                                    <span>Đang phân tích ảnh...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4">
+                            <button onclick="copyToClipboard(document.getElementById('scan-result').value)" class="flex-1 py-2.5 rounded-xl border ${styles.border} hover:bg-white/5 ${styles.textPrimary} font-medium transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="copy" size="16"></i> Copy
+                            </button>
+                            <!-- Nút Tinh chỉnh Mới -->
+                            <button onclick="refineScannedText()" class="flex-1 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-lg shadow-purple-500/30 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="wand-2" size="18"></i> Tinh chỉnh
+                            </button>
+                            <button onclick="transferScanToadd()" class="flex-[2] py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="file-plus" size="18"></i> Tạo Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let currentFileBase64 = null;
+        let currentFileType = null;
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('image-preview');
+                    const container = document.getElementById('preview-container');
+                    const placeholder = document.getElementById('upload-placeholder');
+                    const scanBtn = document.getElementById('scan-btn');
+                    
+                    preview.src = e.target.result;
+                    container.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    scanBtn.disabled = false;
+
+                    // Prepare data for API
+                    currentFileBase64 = e.target.result.split(',')[1];
+                    currentFileType = file.type;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function handleImageScan() {
+            if (!currentFileBase64) return;
+
+            const loading = document.getElementById('scan-loading');
+            const resultArea = document.getElementById('scan-result');
+            loading.classList.remove('hidden');
+            if(loading.querySelector('span')) loading.querySelector('span').innerText = "Đang phân tích ảnh...";
+
+            try {
+                // Sử dụng model Gemini 1.5 Flash (hoặc Pro Vision) để xử lý ảnh
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+                
+                const payload = {
+                    contents: [{
+                        parts: [
+                            { text: "Hãy trích xuất toàn bộ văn bản có trong hình ảnh này. Giữ nguyên định dạng gốc (xuống dòng, danh sách) nếu có. Chỉ trả về nội dung văn bản, không thêm lời dẫn." },
+                            {
+                                inline_data: {
+                                    mime_type: currentFileType,
+                                    data: currentFileBase64
+                                }
+                            }
+                        ]
+                    }]
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Không tìm thấy văn bản nào.";
+                
+                resultArea.value = text;
+                state.scanResult = text;
+            } catch (error) {
+                console.error(error);
+                showToast("Lỗi khi phân tích ảnh!");
+                resultArea.value = "Đã xảy ra lỗi kết nối đến AI. Vui lòng kiểm tra lại API Key hoặc mạng.";
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // NEW FUNCTION: REFINE SCANNED TEXT
+        async function refineScannedText() {
+            const currentText = document.getElementById('scan-result').value;
+            if (!currentText || currentText.includes("Đang phân tích") || currentText.includes("lỗi")) {
+                showToast("Chưa có nội dung để tinh chỉnh!");
+                return;
+            }
+
+            const loading = document.getElementById('scan-loading');
+            const resultArea = document.getElementById('scan-result');
+            
+            // Update loading UI
+            if(loading.querySelector('span')) loading.querySelector('span').innerText = "Đang tối ưu hóa prompt...";
+            loading.classList.remove('hidden');
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+                
+                const payload = {
+                    contents: [{
+                        parts: [
+                            { text: "Bạn là một chuyên gia tạo prompt (Prompt Engineer). Hãy phân tích văn bản thô sau đây (được quét từ ảnh) và viết lại nó thành một câu lệnh (prompt) hoàn chỉnh, rõ ràng, súc tích để gửi cho AI. Nếu văn bản là một bài toán, hãy chuyển thành prompt 'Giải bài toán...'. Nếu là văn bản văn học, chuyển thành 'Phân tích...'. Loại bỏ các ký tự thừa do lỗi OCR. Chỉ trả về nội dung prompt đã tinh chỉnh, không thêm lời dẫn.\n\nVăn bản gốc:\n" + currentText }
+                        ]
+                    }]
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const refinedText = data.candidates?.[0]?.content?.parts?.[0]?.text || currentText;
+                
+                resultArea.value = refinedText;
+                state.scanResult = refinedText; // Update state
+                showToast("Đã tinh chỉnh thành công!");
+
+            } catch (error) {
+                console.error(error);
+                showToast("Lỗi khi tinh chỉnh!");
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // NEW FUNCTION: SMART PROMPT GENERATION (FROM IDEA)
+        async function generateSmartPrompt() {
+            const idea = document.getElementById('smart-idea-input').value;
+            if (!idea) {
+                showToast("Vui lòng nhập ý tưởng trước!");
+                return;
+            }
+
+            const btn = document.getElementById('smart-gen-btn');
+            const loading = document.getElementById('smart-loading');
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            loading.classList.remove('hidden');
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+                
+                const systemInstruction = `
+                    Bạn là một chuyên gia Prompt Engineering. Nhiệm vụ của bạn là tạo ra một Prompt Template chất lượng cao từ ý tưởng của người dùng.
+                    Yêu cầu:
+                    1. Prompt phải ngắn gọn, súc tích, vừa đủ ý (concise).
+                    2. Sử dụng các placeholder trong ngoặc vuông [ ] cho các thông tin cần điền.
+                    3. Trả về kết quả dưới dạng JSON thuần (không markdown) với cấu trúc:
+                    {
+                        "title": "Tiêu đề ngắn gọn (dưới 10 từ)",
+                        "description": "Mô tả mục đích (1 câu)",
+                        "content": "Nội dung prompt hoàn chỉnh",
+                        "category": "Một trong các loại: Giáo dục, Lập trình, Marketing, Viết lách, Công việc, Năng suất"
+                    }
+                `;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        contents: [{ parts: [{ text: `Ý tưởng: ${idea}` }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] },
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                const data = await response.json();
+                const result = JSON.parse(data.candidates[0].content.parts[0].text);
+
+                // Auto-fill form
+                document.querySelector('input[name="title"]').value = result.title;
+                document.querySelector('input[name="description"]').value = result.description;
+                document.querySelector('textarea[name="content"]').value = result.content;
+                
+                // Select category if valid
+                const catSelect = document.querySelector('select[name="category"]');
+                if (CATEGORIES.includes(result.category)) {
+                    catSelect.value = result.category;
+                }
+
+                showToast("Đã tạo prompt thành công!");
+
+            } catch (error) {
+                console.error(error);
+                showToast("Lỗi khi tạo prompt!");
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+                loading.classList.add('hidden');
+            }
+        }
+
+        function transferScanToadd() {
+            if (!state.scanResult) {
+                showToast("Chưa có nội dung để thêm!");
+                return;
+            }
+            // Mở modal Add và truyền dữ liệu text sang
+            openModal('add', { content: state.scanResult });
+        }
+
+        // Updated Add Modal to accept initial data and AI Generation
+        function renderAddModal(container, initialData = null) {
+            const styles = getStyles();
+            const defaultContent = initialData ? initialData.content : "";
+            
+            container.innerHTML = `
+                <div class="p-8 border-b ${styles.border} bg-gradient-to-r from-indigo-900/10 to-purple-900/10">
+                    <h2 class="text-2xl font-bold ${styles.textPrimary} flex items-center gap-3"><i data-lucide="plus" class="text-indigo-500"></i> Đóng góp Prompt</h2>
+                </div>
+                
+                <!-- NEW: AI Smart Generator Section -->
+                <div class="px-8 pt-6 pb-2">
+                    <div class="p-4 rounded-xl border border-dashed ${state.theme === 'dark' ? 'border-purple-500/30 bg-purple-500/5' : 'border-purple-300 bg-purple-50'}">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="p-1.5 bg-purple-500/10 rounded-lg text-purple-600"><i data-lucide="sparkles" size="16"></i></div>
+                            <span class="text-sm font-bold ${styles.textAccent}">Tạo Prompt Thông Minh</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <input id="smart-idea-input" class="flex-1 ${styles.inputBg} border ${styles.border} rounded-xl px-4 py-2 text-sm ${styles.textPrimary} focus:border-purple-500 outline-none transition-all" placeholder="Nhập ý tưởng ngắn (VD: Viết email xin nghỉ phép...)">
+                            <button onclick="generateSmartPrompt()" id="smart-gen-btn" class="whitespace-nowrap px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold shadow-lg shadow-purple-500/30 transition-all flex items-center gap-2">
+                                <i data-lucide="zap" size="14"></i> Tạo ngay
+                            </button>
+                        </div>
+                        <div id="smart-loading" class="hidden mt-2 text-xs text-purple-500 flex items-center gap-2">
+                            <i data-lucide="loader-2" class="animate-spin" size="12"></i> Đang suy nghĩ và viết prompt...
+                        </div>
+                    </div>
+                </div>
+
+                <form onsubmit="handleAddSubmit(event)" class="p-8 space-y-6 overflow-y-auto custom-scrollbar flex-1 ${styles.modalBg}">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium ${styles.textSecondary} mb-2">Tiêu đề</label>
+                            <input required name="title" class="w-full ${styles.inputBg} border ${styles.border} rounded-xl px-4 py-3 ${styles.textPrimary} focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all" placeholder="VD: Sáng tạo slogan">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium ${styles.textSecondary} mb-2">Danh mục</label>
+                            <select name="category" class="w-full ${styles.inputBg} border ${styles.border} rounded-xl px-4 py-3 ${styles.textPrimary} outline-none">
+                                ${CATEGORIES.filter(c => c !== 'Tất cả').map(c => `<option value="${c}">${c}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ${styles.textSecondary} mb-2">Mô tả ý tưởng</label>
+                        <input required name="description" class="w-full ${styles.inputBg} border ${styles.border} rounded-xl px-4 py-3 ${styles.textPrimary} outline-none" placeholder="Prompt này dùng để làm gì?">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium ${styles.textSecondary} mb-2">Nội dung Prompt</label>
+                        <textarea required name="content" rows="8" class="w-full ${styles.inputBg} border ${styles.border} rounded-xl px-4 py-3 ${styles.textPrimary} font-mono text-sm outline-none focus:border-indigo-500 transition-all" placeholder="Nhập nội dung...">${defaultContent}</textarea>
+                        ${initialData ? `<p class="text-xs text-emerald-500 mt-2 flex items-center gap-1"><i data-lucide="check-circle" size="12"></i> Đã điền tự động từ kết quả Scan ảnh</p>` : ''}
+                    </div>
+                    <button type="submit" class="w-full justify-center py-4 font-bold text-lg relative overflow-hidden transition-all duration-300 transform hover:scale-105 active:scale-95 px-5 rounded-xl flex items-center gap-2 backdrop-blur-md bg-indigo-600/90 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 border border-indigo-400/30">Thêm vào thư viện</button>
+                </form>
+            `;
+        }
+
+        function handleAddSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const newPrompt = {
+                id: Date.now(),
+                title: formData.get('title'),
+                category: formData.get('category'),
+                description: formData.get('description'),
+                content: formData.get('content'),
+                tags: ["New", "User"]
+            };
+            state.prompts.unshift(newPrompt);
+            localStorage.setItem('pm_data', JSON.stringify(state.prompts));
+            closeModal();
+            renderApp();
+            showToast("Đã thêm prompt mới!");
+        }
+
+        function openTestModal(prompt) {
+            state.activePrompt = prompt;
+            openModal('test');
+        }
+
+        let templateVariables = {};
+        function renderTestModal(container) {
+            const styles = getStyles();
+            const prompt = state.activePrompt;
+            const matches = prompt.content.match(/\[(.*?)\]/g);
+            templateVariables = {};
+            if(matches) matches.forEach(m => templateVariables[m] = '');
+
+            container.innerHTML = `
+                <div class="flex h-full flex-col md:flex-row">
+                    <div class="w-full md:w-4/12 ${styles.iconBg} border-r ${styles.border} flex flex-col h-full">
+                         <div class="p-6 border-b ${styles.border} ${styles.modalBg}">
+                             <div class="flex items-center gap-3 mb-2"><div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-500"><i data-lucide="sparkles" size="18"></i></div><h3 class="font-bold ${styles.textPrimary}">Cấu hình Prompt</h3></div>
+                             <p class="text-xs ${styles.textSecondary}">Điền thông tin vào các ô trống để hoàn thiện câu lệnh.</p>
+                         </div>
+                         <div class="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar" id="variables-container">
+                             ${Object.keys(templateVariables).length > 0 ? Object.keys(templateVariables).map(key => `
+                                <div>
+                                    <label class="text-xs font-bold ${styles.textAccent} mb-1.5 block ml-1">${key.replace(/[\[\]]/g, '')}</label>
+                                    <div class="flex gap-2">
+                                        <input class="variable-input flex-1 ${styles.inputBg} border ${styles.border} rounded-lg px-3 py-2 text-sm ${styles.textPrimary} focus:border-indigo-500 outline-none transition-all" placeholder="..." data-key="${key}" oninput="updatePreview()">
+                                    </div>
+                                </div>
+                             `).join('') : `<div class="text-center ${styles.textSecondary} italic text-sm mt-10">Prompt này không có biến số cần điền.</div>`}
+                             <div class="pt-4 border-t ${styles.border}">
+                               <label class="text-xs font-bold ${styles.textSecondary} mb-2 block">Preview Prompt</label>
+                               <textarea id="preview-prompt" class="w-full ${styles.inputBg} border ${styles.border} rounded-lg p-3 text-xs ${styles.textSecondary} font-mono h-32 resize-none focus:border-indigo-500 outline-none" readonly>${prompt.content}</textarea>
+                               <button onclick="copyCurrentPrompt()" class="mt-2 text-xs flex items-center gap-1 text-indigo-500 hover:text-indigo-400 font-bold ml-auto"><i data-lucide="copy" size="12"></i> Sao chép</button>
+                             </div>
+                         </div>
+                         <div class="p-4 border-t ${styles.border} ${styles.modalBg} space-y-4">
+                             <button onclick="runPrompt()" class="w-full justify-center relative overflow-hidden transition-all duration-300 transform hover:scale-105 active:scale-95 px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 backdrop-blur-md bg-indigo-600/90 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/30 border border-indigo-400/30">
+                                <i data-lucide="play" size="18" fill="currentColor"></i> Gửi cho Gemini
+                             </button>
+                             <div>
+                               <div class="text-[10px] font-bold uppercase tracking-widest ${styles.textSecondary} text-center mb-3">Chạy nhanh trên nền tảng khác</div>
+                               <div class="grid grid-cols-4 gap-2">
+                                 ${AI_TOOLS.map(tool => `
+                                   <button onclick="copyAndOpen('${tool.url}')" class="aspect-square rounded-xl border ${styles.border} hover:bg-white/5 flex flex-col items-center justify-center gap-1 transition-all group relative overflow-hidden" title="Copy & Mở ${tool.name}">
+                                     <div class="w-6 h-6"><img src="${tool.icon}" class="w-full h-full object-contain"></div>
+                                     <span class="text-[9px] font-medium opacity-60 group-hover:opacity-100 transition-opacity ${styles.textSecondary}">${tool.name}</span>
+                                   </button>
+                                 `).join('')}
+                               </div>
+                             </div>
+                         </div>
+                    </div>
+                    <div class="flex-1 flex flex-col ${state.theme === 'dark' ? 'bg-[#0b0d14]' : 'bg-slate-50'} relative">
+                        <div class="p-4 border-b ${styles.border} flex justify-between items-center ${styles.glass} absolute top-0 left-0 right-0 z-10">
+                            <span class="text-sm font-bold text-emerald-500 flex items-center gap-2"><i data-lucide="bot" size="16"></i> Chat Session</span>
+                            <button onclick="clearChat()" class="text-xs ${styles.textSecondary} hover:text-red-500 px-3 py-1 rounded-full border ${styles.border} hover:border-red-500/30 transition-all">Clear</button>
+                        </div>
+                        <div id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 pt-20 custom-scrollbar">
+                            <div class="h-full flex flex-col items-center justify-center ${styles.textSecondary} gap-4 opacity-50">
+                                <i data-lucide="bot" size="64" stroke-width="1"></i><p>Sẵn sàng trò chuyện</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updatePreview() {
+            const inputs = document.querySelectorAll('.variable-input');
+            let content = state.activePrompt.content;
+            inputs.forEach(input => {
+                const key = input.getAttribute('data-key');
+                const val = input.value;
+                if (val) content = content.split(key).join(val);
+            });
+            document.getElementById('preview-prompt').value = content;
+        }
+
+        function copyCurrentPrompt() {
+            const text = document.getElementById('preview-prompt').value;
+            copyToClipboard(text);
+        }
+
+        function copyAndOpen(url) {
+            const text = document.getElementById('preview-prompt').value;
+            copyToClipboard(text);
+            setTimeout(() => window.open(url, '_blank'), 500);
+        }
+
+        function clearChat() {
+            state.chatHistory = [];
+            document.getElementById('chat-container').innerHTML = `
+                <div class="h-full flex flex-col items-center justify-center ${getStyles().textSecondary} gap-4 opacity-50">
+                    <i data-lucide="bot" size="64" stroke-width="1"></i><p>Sẵn sàng trò chuyện</p>
+                </div>
+            `;
+        }
+
+        async function runPrompt() {
+            const promptText = document.getElementById('preview-prompt').value;
+            if(!promptText) return;
+            const chatContainer = document.getElementById('chat-container');
+            const styles = getStyles();
+
+            if(state.chatHistory.length === 0) chatContainer.innerHTML = '';
+
+            state.chatHistory.push({ role: 'user', content: promptText });
+            const userMsgHTML = `
+                <div class="flex gap-4 justify-end">
+                    <div class="max-w-[85%] rounded-2xl p-5 shadow-md bg-indigo-600 text-white rounded-tr-sm">
+                        <p class="whitespace-pre-wrap text-sm leading-relaxed">${escapeHtml(promptText)}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-slate-500 flex items-center justify-center mt-1"><i data-lucide="user" class="text-white" size="16"></i></div>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', userMsgHTML);
+            lucide.createIcons();
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const loadingId = 'loading-' + Date.now();
+            const loadingHTML = `
+                <div id="${loadingId}" class="flex gap-4 justify-start">
+                    <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center mt-1 shadow-lg shadow-indigo-600/30"><i data-lucide="loader-2" class="animate-spin text-white" size="16"></i></div>
+                    <div class="${styles.cardBg} rounded-2xl p-4 border ${styles.border}">
+                        <div class="flex gap-1"><span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span><span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-75"></span><span class="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-150"></span></div>
+                    </div>
+                </div>
+            `;
+            chatContainer.insertAdjacentHTML('beforeend', loadingHTML);
+            lucide.createIcons();
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                // Sử dụng GEMINI_API_KEY toàn cục
+                let responseText = "Đây là phản hồi mô phỏng từ AI vì chưa có API Key thực tế. Bạn có thể tích hợp Google Gemini API vào đây. \n\nVí dụ code:\n```python\nprint('Hello World')\n```";
+                
+                if (GEMINI_API_KEY) {
+                   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+                   const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                   });
+                   const data = await response.json();
+                   responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi.";
+                } else {
+                    await new Promise(r => setTimeout(r, 1500)); 
+                }
+
+                document.getElementById(loadingId).remove();
+
+                state.chatHistory.push({ role: 'ai', content: responseText });
+                const aiMsgHTML = `
+                    <div class="flex gap-4 justify-start">
+                        <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center mt-1 shadow-lg shadow-indigo-600/30"><i data-lucide="bot" class="text-white" size="16"></i></div>
+                        <div class="max-w-[85%] rounded-2xl p-5 shadow-md ${styles.cardBg} border ${styles.border} ${styles.textPrimary} rounded-tl-sm">
+                            ${simpleMarkdown(responseText)}
+                        </div>
+                    </div>
+                `;
+                chatContainer.insertAdjacentHTML('beforeend', aiMsgHTML);
+                lucide.createIcons();
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                showToast("Lỗi kết nối!");
+            }
+        }
+
+        function switchView(view) {
+            state.currentView = view;
+            renderApp();
+        }
+
+        function setCategory(cat) {
+            state.activeCategory = cat;
+            state.activeSubject = null; // Reset sub-filter when changing main category
+            renderApp();
+        }
+
+        function setSubject(sub) {
+            state.activeSubject = sub;
+            renderApp();
+        }
+
+        window.onload = () => {
+            applyTheme();
+            renderApp();
+        };
+
+    </script>
+</body>
+</html>
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -1018,3 +2380,4 @@
 </body>
 
 </html>
+
